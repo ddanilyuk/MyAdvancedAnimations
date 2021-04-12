@@ -1,24 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18121" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="fyN-FF-w0C">
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18092"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Music-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MyAdvancedAnimations" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="BgT-6t-fNx">
+                                <rect key="frame" x="0.0" y="716" width="390" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="details" translatesAutoresizingMaskIntoConstraints="NO" id="EO2-Oa-ZYJ">
+                                        <rect key="frame" x="0.0" y="0.0" width="390" height="128"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                <constraints>
+                                    <constraint firstItem="EO2-Oa-ZYJ" firstAttribute="leading" secondItem="BgT-6t-fNx" secondAttribute="leading" id="6kO-jK-wCF"/>
+                                    <constraint firstAttribute="bottom" secondItem="EO2-Oa-ZYJ" secondAttribute="bottom" id="9cG-hL-O38"/>
+                                    <constraint firstAttribute="trailing" secondItem="EO2-Oa-ZYJ" secondAttribute="trailing" id="aXB-QO-nHl"/>
+                                    <constraint firstAttribute="height" constant="128" id="rs9-Nk-3by"/>
+                                    <constraint firstItem="EO2-Oa-ZYJ" firstAttribute="top" secondItem="BgT-6t-fNx" secondAttribute="top" id="yNs-sE-mOb"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="rs9-Nk-3by"/>
+                                    </mask>
+                                </variation>
+                            </view>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="BgT-6t-fNx" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="BTd-jS-LbJ"/>
+                            <constraint firstAttribute="bottom" secondItem="BgT-6t-fNx" secondAttribute="bottom" id="NTP-9e-dVz"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="BgT-6t-fNx" secondAttribute="trailing" id="QzN-HB-84N"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="QzN-HB-84N"/>
+                                <exclude reference="BTd-jS-LbJ"/>
+                                <exclude reference="NTP-9e-dVz"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Music" image="music.note" catalog="system" id="qcM-g7-52Y"/>
+                    <connections>
+                        <outlet property="controlView" destination="BgT-6t-fNx" id="90t-AJ-5dh"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1067.6923076923076" y="132.93838862559241"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="A8b-rH-htn">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="fyN-FF-w0C" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="23e-sw-6wn">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="qU6-Ie-zok"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Egn-av-3JO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="138.46153846153845" y="132.93838862559241"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="details" width="1125" height="2436"/>
+        <image name="music.note" catalog="system" width="97" height="128"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>
