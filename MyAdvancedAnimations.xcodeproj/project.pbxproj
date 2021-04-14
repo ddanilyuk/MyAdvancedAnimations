@@ -12,6 +12,7 @@
 		5F0568A72624930700EBBBDC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F0568A52624930700EBBBDC /* Main.storyboard */; };
 		5F0568A92624930A00EBBBDC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F0568A82624930A00EBBBDC /* Assets.xcassets */; };
 		5F0568AC2624930A00EBBBDC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F0568AA2624930A00EBBBDC /* LaunchScreen.storyboard */; };
+		5F8AA5122624D7CD00ED87DE /* SF-Pro-Rounded-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5F8AA5112624D7CA00ED87DE /* SF-Pro-Rounded-Semibold.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		5F0568A82624930A00EBBBDC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5F0568AB2624930A00EBBBDC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5F0568AD2624930A00EBBBDC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5F8AA5112624D7CA00ED87DE /* SF-Pro-Rounded-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Rounded-Semibold.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				5F0568A52624930700EBBBDC /* Main.storyboard */,
 				5F0568A82624930A00EBBBDC /* Assets.xcassets */,
 				5F0568AA2624930A00EBBBDC /* LaunchScreen.storyboard */,
+				5F8AA5112624D7CA00ED87DE /* SF-Pro-Rounded-Semibold.otf */,
 				5F0568AD2624930A00EBBBDC /* Info.plist */,
 			);
 			path = MyAdvancedAnimations;
@@ -124,6 +127,7 @@
 				5F0568AC2624930A00EBBBDC /* LaunchScreen.storyboard in Resources */,
 				5F0568A92624930A00EBBBDC /* Assets.xcassets in Resources */,
 				5F0568A72624930700EBBBDC /* Main.storyboard in Resources */,
+				5F8AA5122624D7CD00ED87DE /* SF-Pro-Rounded-Semibold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +289,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = M92VXVU7J9;
 				INFOPLIST_FILE = MyAdvancedAnimations/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -304,6 +309,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = M92VXVU7J9;
 				INFOPLIST_FILE = MyAdvancedAnimations/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
