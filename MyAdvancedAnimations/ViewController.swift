@@ -80,13 +80,16 @@ final class ViewController: UIViewController {
         
         setupTabbar()
         setupGradient()
+        setupView()
+        addGestures()
+    }
+    
+    private func setupView() {
         
         contentView.clipsToBounds = true
         contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         albumImageView.layer.cornerRadius = 10
         contentView.frame = state.getContentFrameIn(view)
-        
-        addGestures()
     }
     
     private func setupTabbar() {
@@ -185,13 +188,10 @@ final class ViewController: UIViewController {
             animateTransitionIfNeeded(state: state, duration: duration)
             runningAnimators.forEach { $0.startAnimation() }
         } else {
-            
             guard !isCancelling else {
                 return
             }
-            runningAnimators.forEach {
-                $0.isReversed = !$0.isReversed
-            }
+            runningAnimators.forEach { $0.isReversed = !$0.isReversed }
         }
     }
     
