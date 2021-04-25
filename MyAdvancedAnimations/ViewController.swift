@@ -15,7 +15,7 @@ final class ViewController: UIViewController {
         case collapsed
         case expanded
         
-        func getFrameFrom(_ view: UIView) -> CGRect {
+        func getContentFrameIn(_ view: UIView) -> CGRect {
             
             switch self {
             case .collapsed:
@@ -40,13 +40,8 @@ final class ViewController: UIViewController {
             }
         }
         
-        var next: State {
-            switch self {
-            case .collapsed:
-                return .expanded
-            case .expanded:
-                return .collapsed
-            }
+        static prefix func !(_ state: State) -> State {
+            return state == .collapsed ? .expanded : .collapsed
         }
     }
     
@@ -59,7 +54,7 @@ final class ViewController: UIViewController {
     
     // MARK: - IBOutlets
     
-    @IBOutlet weak var controlView: UIVisualEffectView!
+    @IBOutlet weak var contentView: UIVisualEffectView!
     
     @IBOutlet weak var songLabel: UILabel!
     @IBOutlet weak var songBottom: NSLayoutConstraint!
@@ -89,9 +84,13 @@ final class ViewController: UIViewController {
         setupTabbar()
         setupGradient()
         
-        albumImageView.layer.cornerRadius = 6
-        controlView.frame = state.getFrameFrom(view)
+        contentView.clipsToBounds = true
+        contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
 
+        songLabel.isHidden = true
+        albumImageView.layer.cornerRadius = 10
+        contentView.frame = state.getContentFrameIn(view)
+        
         addGestures()
     }
     
@@ -100,7 +99,7 @@ final class ViewController: UIViewController {
         guard let tabBar = tabBarController?.tabBar else {
             return
         }
-
+        
         tabBar.isTranslucent = true
         tabBar.backgroundImage = UIImage()
         tabBar.barTintColor = .clear
@@ -122,44 +121,39 @@ final class ViewController: UIViewController {
         
         gradient.frame = self.view.bounds
         gradient.colors = gradientSet[currentGradient]
-        gradient.startPoint = CGPoint(x:0, y:0)
-        gradient.endPoint = CGPoint(x:1, y:1)
+        gradient.startPoint = CGPoint(x: 0, y: 0)
+        gradient.endPoint = CGPoint(x: 1, y: 1)
         gradient.drawsAsynchronously = true
         view.layer.insertSublayer(gradient, at: 0)
         
         animateGradient()
     }
     
-
+    // MARK: - Gestures
     
     private func addGestures() {
         
-        // Tap gesture
-        controlView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapGesture)))
-        
-        // Pan gesutre
-        controlView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture)))
+        contentView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapGesture)))
+        contentView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture)))
     }
-    
-    // MARK: - Gestures
     
     @objc
     private func handleTapGesture(_ recognizer: UITapGestureRecognizer) {
         
-        animateOrReverseRunningTransition(state: state.next, duration: Constants.animationDuration)
+        animateOrReverseRunningTransition(state: !state, duration: Constants.animationDuration)
     }
     
     @objc
     private func handlePanGesture(_ recognizer: UIPanGestureRecognizer) {
-        let translation = recognizer.translation(in: controlView)
+        let translation = recognizer.translation(in: contentView)
         
         switch recognizer.state {
         case .began:
-            startInteractiveTransition(state: state.next, duration: Constants.animationDuration)
+            startInteractiveTransition(state: !state, duration: Constants.animationDuration)
         case .changed:
-            updateInteractiveTransition(fractionComplete: fractionComplete(state: state.next, translation: translation))
+            updateInteractiveTransition(fractionComplete: fractionComplete(state: !state, translation: translation))
         case .ended:
-            continueInteractiveTransition(fractionComplete: fractionComplete(state: state.next, translation: translation))
+            continueInteractiveTransition(fractionComplete: fractionComplete(state: !state, translation: translation))
         default:
             break
         }
@@ -170,8 +164,6 @@ final class ViewController: UIViewController {
         let translationY = state == .expanded ? -translation.y : translation.y
         let fractionComplete = translationY / (view.frame.height - Constants.collapsedHeight - 0) + progressWhenInterrupted
         
-        print("translationY: \(translationY) | fractionComplete: \(fractionComplete)")
-        
         return fractionComplete
     }
     
@@ -179,11 +171,12 @@ final class ViewController: UIViewController {
     
     func animateTransitionIfNeeded(state: State, duration: TimeInterval) {
         
-        addControlViewFrameAnimator(state: state, duration: duration)
-        addCornerRadiusAnimator(state: state, duration: duration)
-        addTabBarAnimator(state: state, duration: duration)
-        addAlbumCoverAnimation(state: state, duration: duration)
-        addSongLabelAnimation(state: state, duration: duration)
+        if runningAnimators.isEmpty {
+            addControlViewFrameAnimator(state: state, duration: duration)
+            addCornerRadiusAnimator(state: state, duration: duration)
+            addTabBarAnimator(state: state, duration: duration)
+            addAlbumCoverAnimation(state: state, duration: duration)
+        }
     }
     
     func animateOrReverseRunningTransition(state: State, duration: TimeInterval) {
@@ -192,7 +185,10 @@ final class ViewController: UIViewController {
             animateTransitionIfNeeded(state: state, duration: duration)
             runningAnimators.forEach { $0.startAnimation() }
         } else {
-            runningAnimators.forEach { $0.isReversed = !$0.isReversed }
+            runningAnimators.forEach {
+                $0.isReversed = !$0.isReversed
+                $0.scrubsLinearly = true
+            }
         }
     }
     
@@ -210,16 +206,15 @@ final class ViewController: UIViewController {
     
     func continueInteractiveTransition(fractionComplete: CGFloat) {
         
-        let cancel: Bool = fractionComplete < 0.2
+        let cancel: Bool = fractionComplete < 0.1
         
         if cancel {
             runningAnimators.forEach {
                 $0.isReversed = !$0.isReversed
-                $0.continueAnimation(withTimingParameters: nil, durationFactor: 1)
+                $0.continueAnimation(withTimingParameters: nil, durationFactor: 0)
             }
             return
         }
-        
         let timing = UICubicTimingParameters(animationCurve: .easeOut)
         runningAnimators.forEach { $0.continueAnimation(withTimingParameters: timing, durationFactor: 0) }
     }
@@ -229,19 +224,25 @@ final class ViewController: UIViewController {
     private func addControlViewFrameAnimator(state: State, duration: TimeInterval) {
         
         let frameAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) { [self] in
-            
-            controlView.frame = state.getFrameFrom(view)
+            contentView.frame = state.getContentFrameIn(view)
         }
         
         frameAnimator.addCompletion { [weak self] position in
             
+            guard let self = self else {
+                return
+            }
             switch position {
+            case .current:
+                break
             case .end:
-                self?.state = self?.state.next ?? .collapsed
+                self.state = !self.state
+            case .start:
+                break
             default:
                 break
             }
-            self?.runningAnimators.removeAll()
+            self.runningAnimators.removeAll()
         }
         
         runningAnimators.append(frameAnimator)
@@ -252,15 +253,12 @@ final class ViewController: UIViewController {
         guard let tabBar = tabBarController?.tabBar else {
             return
         }
-        
-        let isHidden = state == .expanded
-        
-        if !isHidden {
+                
+        if !(state == .expanded) {
             tabBar.isHidden = false
         }
         
-        let height = tabBar.frame.size.height
-        let offsetY = view.frame.height - (isHidden ? 0 : height)
+        let offsetY = view.frame.height - (state == .expanded ? 0 : tabBar.frame.size.height)
         let frame = CGRect(origin: CGPoint(x: tabBar.frame.minX, y: offsetY), size: tabBar.frame.size)
         
         let tabBarAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) {
@@ -271,51 +269,19 @@ final class ViewController: UIViewController {
     }
     
     private func addAlbumCoverAnimation(state: State, duration: TimeInterval) {
-        
-        let isHidden = state == .expanded
-        
-        albumWidth.constant = isHidden ? view.frame.width - 22 : 61
-        let albumCoverAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) {
-            self.view.layoutIfNeeded()
-        }
-        runningAnimators.append(albumCoverAnimator)
-    }
-    
-    private func addSongLabelAnimation(state: State, duration: TimeInterval) {
-        
-        let isHidden = state == .expanded
-        
-        songLeading.constant = isHidden ? 16 : 83
-        songBottom.constant = isHidden ? 200 : 31
+                
+        albumWidth.constant = state == .expanded ? view.frame.width - 22 : 61
         
         let albumCoverAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) {
-//            switch state {
-//            case .expanded:
-//                self.songLabel.font = UIFont(name: "SF Pro Rounded Semibold", size: 40)
-//            case .collapsed:
-//                self.songLabel.font = UIFont(name: "SF Pro Rounded Semibold", size: 18)
-//            }
-//
             self.view.layoutIfNeeded()
-
-//            switch state {
-//            case .expanded:
-//                self.songLabel.transform = CGAffineTransform.identity.scaledBy(x: 1.4, y: 1.4)
-//            case .collapsed:
-//                self.songLabel.transform = CGAffineTransform.identity
-//            }
         }
         runningAnimators.append(albumCoverAnimator)
     }
     
     private func addCornerRadiusAnimator(state: State, duration: TimeInterval) {
         
-        controlView.clipsToBounds = true
-        controlView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        
         let cornerRadiusAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) {
-            
-            self.controlView.layer.cornerRadius = state.cornerRadius
+            self.contentView.layer.cornerRadius = state.cornerRadius
         }
         runningAnimators.append(cornerRadiusAnimator)
     }
@@ -342,8 +308,8 @@ extension ViewController: CAAnimationDelegate {
         gradient.add(gradientChangeAnimation, forKey: "colorChange")
     }
     
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        if flag {
+    func animationDidStop(_ animation: CAAnimation, finished: Bool) {
+        if finished {
             gradient.colors = gradientSet[currentGradient]
             animateGradient()
         }
