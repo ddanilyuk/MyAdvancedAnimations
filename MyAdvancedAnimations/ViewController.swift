@@ -55,10 +55,6 @@ final class ViewController: UIViewController {
     // MARK: - IBOutlets
     
     @IBOutlet weak var contentView: UIVisualEffectView!
-    
-    @IBOutlet weak var songLabel: UILabel!
-    @IBOutlet weak var songBottom: NSLayoutConstraint!
-    @IBOutlet weak var songLeading: NSLayoutConstraint!
     @IBOutlet weak var albumImageView: UIImageView!
     @IBOutlet weak var albumWidth: NSLayoutConstraint!
     
@@ -67,6 +63,7 @@ final class ViewController: UIViewController {
     private var progressWhenInterrupted: CGFloat = 0
     private var runningAnimators = [UIViewPropertyAnimator]()
     private var state: State = .collapsed
+    private var isCancelling = false
     
     private let gradient = CAGradientLayer()
     private var gradientSet = [[CGColor]]()
@@ -86,8 +83,6 @@ final class ViewController: UIViewController {
         
         contentView.clipsToBounds = true
         contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-
-        songLabel.isHidden = true
         albumImageView.layer.cornerRadius = 10
         contentView.frame = state.getContentFrameIn(view)
         
@@ -145,6 +140,11 @@ final class ViewController: UIViewController {
     
     @objc
     private func handlePanGesture(_ recognizer: UIPanGestureRecognizer) {
+        
+        guard !isCancelling else {
+            return
+        }
+        
         let translation = recognizer.translation(in: contentView)
         
         switch recognizer.state {
@@ -185,9 +185,12 @@ final class ViewController: UIViewController {
             animateTransitionIfNeeded(state: state, duration: duration)
             runningAnimators.forEach { $0.startAnimation() }
         } else {
+            
+            guard !isCancelling else {
+                return
+            }
             runningAnimators.forEach {
                 $0.isReversed = !$0.isReversed
-                $0.scrubsLinearly = true
             }
         }
     }
@@ -209,9 +212,13 @@ final class ViewController: UIViewController {
         let cancel: Bool = fractionComplete < 0.1
         
         if cancel {
+            guard !runningAnimators.isEmpty else {
+                return
+            }
+            isCancelling = true
             runningAnimators.forEach {
                 $0.isReversed = !$0.isReversed
-                $0.continueAnimation(withTimingParameters: nil, durationFactor: 0)
+                $0.continueAnimation(withTimingParameters: nil, durationFactor: 0.5)
             }
             return
         }
@@ -243,6 +250,9 @@ final class ViewController: UIViewController {
                 break
             }
             self.runningAnimators.removeAll()
+            if self.isCancelling {
+                self.isCancelling = false
+            }
         }
         
         runningAnimators.append(frameAnimator)
@@ -253,7 +263,7 @@ final class ViewController: UIViewController {
         guard let tabBar = tabBarController?.tabBar else {
             return
         }
-                
+        
         if !(state == .expanded) {
             tabBar.isHidden = false
         }
@@ -269,7 +279,7 @@ final class ViewController: UIViewController {
     }
     
     private func addAlbumCoverAnimation(state: State, duration: TimeInterval) {
-                
+        
         albumWidth.constant = state == .expanded ? view.frame.width - 22 : 61
         
         let albumCoverAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) {

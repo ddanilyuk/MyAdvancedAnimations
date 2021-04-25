@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="fyN-FF-w0C">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18121" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="fyN-FF-w0C">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18092"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -66,19 +66,10 @@
                                                 <constraint firstAttribute="width" constant="61" id="huI-HC-rB9"/>
                                             </constraints>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LinkPark - Numb" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ae3-kf-C51">
-                                            <rect key="frame" x="83" y="31" width="291" height="21"/>
-                                            <fontDescription key="fontDescription" name="SFProRounded-Semibold" family="SF Pro Rounded" pointSize="18"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="9Pd-pm-FUe" firstAttribute="leading" secondItem="F9o-Il-xif" secondAttribute="leading" constant="11" id="53b-IG-CmZ"/>
                                         <constraint firstItem="9Pd-pm-FUe" firstAttribute="top" secondItem="F9o-Il-xif" secondAttribute="top" constant="11" id="FP3-5K-1gi"/>
-                                        <constraint firstAttribute="trailing" secondItem="ae3-kf-C51" secondAttribute="trailing" constant="16" id="QBb-DH-yCB"/>
-                                        <constraint firstItem="ae3-kf-C51" firstAttribute="leading" secondItem="F9o-Il-xif" secondAttribute="leading" constant="83" id="VsC-1S-MIa"/>
-                                        <constraint firstAttribute="bottom" secondItem="ae3-kf-C51" secondAttribute="bottom" constant="31" id="leu-k5-Gn7"/>
                                     </constraints>
                                 </view>
                                 <blurEffect style="systemThinMaterial"/>
@@ -109,9 +100,6 @@
                         <outlet property="albumImageView" destination="9Pd-pm-FUe" id="vS3-4t-Dsn"/>
                         <outlet property="albumWidth" destination="huI-HC-rB9" id="MC1-to-JJi"/>
                         <outlet property="contentView" destination="wdY-uf-Xid" id="cPQ-5i-6YB"/>
-                        <outlet property="songBottom" destination="leu-k5-Gn7" id="7ZH-PS-a5z"/>
-                        <outlet property="songLabel" destination="ae3-kf-C51" id="FEO-Ch-Rhv"/>
-                        <outlet property="songLeading" destination="VsC-1S-MIa" id="d77-6T-UTZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
